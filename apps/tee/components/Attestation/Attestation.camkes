@@ -1,0 +1,13 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+import "../../interfaces/Attest.idl4";
+import "../../interfaces/Offload.idl4";
+
+component Attestation {
+    provides Attest attest;
+    uses Offload offload;
+}

@@ -1,0 +1,11 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+import "../../interfaces/Load.idl4";
+
+component Loader {
+    provides Load load;
+}

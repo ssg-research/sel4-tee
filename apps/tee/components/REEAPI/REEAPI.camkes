@@ -1,0 +1,15 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+import "../../interfaces/REE.idl4";
+import "../../interfaces/Load.idl4";
+import "../../interfaces/Attest.idl4";
+
+component REEAPI {
+    provides REE ree;
+    uses Load load;
+    uses Attest attest;
+}

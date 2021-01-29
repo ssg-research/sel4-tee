@@ -1,0 +1,29 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+import <std_connector.camkes>;
+
+import "components/Attestation/Attestation.camkes";
+import "components/Driver/Driver.camkes";
+import "components/Loader/Loader.camkes";
+import "components/REEAPI/REEAPI.camkes";
+import "components/Runner/Runner.camkes";
+
+assembly {
+        composition {
+                component Attestation attestation;
+                component Driver driver;
+                component Loader loader;
+                component REEAPI api;
+                component Runner runner;
+
+                connection seL4RPCCall runner_api_conn(from runner.ree, to api.ree);
+                connection seL4RPCCall api_loader_conn(from api.load, to loader.load);
+                connection seL4RPCCall api_attest_conn(from api.attest, to attestation.attest);
+                connection seL4RPCCall attest_driver_conn(from attestation.offload, to driver.offload);
+        }
+}
+
