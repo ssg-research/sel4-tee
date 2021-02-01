@@ -7,7 +7,7 @@
 #include <camkes.h>
 #include <stdio.h>
 
-int ree_load(char* application)
+int ree_load(const char* application)
 {
     printf("%s: Call Loader\n", get_instance_name());
     load_load("TestApplication");
@@ -15,7 +15,7 @@ int ree_load(char* application)
     return 0;
 }
 
-int ree_attest(char* application)
+int ree_attest(const char* application)
 {
     printf("%s: Call Attestation\n", get_instance_name());
     char* res = attest_attest("TestApplication");

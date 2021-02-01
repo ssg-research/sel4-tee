@@ -5,5 +5,5 @@
  */
 
 procedure Load {
-    void load(in string application);
+    int load(in string application);
 }
