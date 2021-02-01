@@ -19,7 +19,7 @@
 # ../griddle --PLATFORM=sabre --SIMULATION
 # ninja
 #
-set(CAMKES_APP "adder" CACHE STRING "CAmkES application to build")
+set(CAMKES_APP "tee" CACHE STRING "CAmkES application to build")
 set(SIMULATION ON CACHE BOOL "Try and use simulable features")
 set(RELEASE OFF CACHE BOOL "Performance optimized build")
 set(PLATFORM "x86_64" CACHE STRING "Platform to use")

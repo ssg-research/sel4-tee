@@ -8,11 +8,11 @@ cmake_minimum_required(VERSION 3.7.2)
 
 project(tee C)
 
-DeclareCAmkESComponent(Attestation SOURCES components/Attestation/src/attestation.c)
-DeclareCAmkESComponent(Driver SOURCES components/Driver/src/driver.c)
-DeclareCAmkESComponent(Loader SOURCES components/Loader/src/loader.c)
-DeclareCAmkESComponent(REEAPI SOURCES components/REEAPI/src/api.c)
-DeclareCAmkESComponent(Runner SOURCES components/Runner/src/runner.c)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Attestation)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Driver)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Loader)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/REEAPI)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Runner)
 
 DeclareCAmkESRootserver(tee.camkes)
 add_simulate_test([=[wait_for "After the client"]=])

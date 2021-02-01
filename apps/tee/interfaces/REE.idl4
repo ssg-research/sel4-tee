@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-procedure {
+procedure REE {
     int load(in string application);
+    int attest(in string application);
 }
