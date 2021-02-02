@@ -1,0 +1,11 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+import "../../interfaces/Hello.idl4";
+
+component TA {
+    provides Hello hello;
+}
