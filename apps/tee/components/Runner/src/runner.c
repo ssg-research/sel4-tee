@@ -9,12 +9,12 @@
 
 int run(void)
 {
-    printf("%s: Call Load\n", get_instance_name());
-    if (ree_load("TestApplication"))
+    printf("%s: call load api\n", get_instance_name());
+    if (ree_load("1"))
         printf("%s: Error when calling load api\n");
 
-    printf("%s: Call Attest\n", get_instance_name());
-    if (ree_attest("TestApplication"))
+    printf("%s: call attest api\n", get_instance_name());
+    if (ree_attest("1"))
         printf("%s: Error when calling attest api\n");
 
     printf("%s: Finished running\n", get_instance_name());

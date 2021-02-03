@@ -9,16 +9,16 @@
 
 int ree_load(const char* application)
 {
-    printf("%s: Call Loader\n", get_instance_name());
-    load_load("TestApplication");
+    printf("%s: call Loader\n", get_instance_name());
+    load_load(application);
     
     return 0;
 }
 
 int ree_attest(const char* application)
 {
-    printf("%s: Call Attestation\n", get_instance_name());
-    char* res = attest_attest("TestApplication");
+    printf("%s: call Attestation\n", get_instance_name());
+    char* res = attest_attest(application);
     printf("%s: Received %s from Attestation\n", get_instance_name(), res);
 
     return 0;

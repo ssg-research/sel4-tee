@@ -6,12 +6,14 @@
 
 #include <camkes.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 char* attest_attest(const char *application)
 {
-    printf("%s: I do attestation\n", get_instance_name());
-    char *out;
+    printf("%s: Taking measurements..\n", get_instance_name());
+    printf("%s: call Driver\n", get_instance_name());
+    char *out = NULL;
     offload_sign(application, &out);
     
-    return "Attestation";
+    return out;
 }
