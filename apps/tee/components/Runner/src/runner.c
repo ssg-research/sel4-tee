@@ -14,8 +14,11 @@ int run(void)
         printf("%s: Error when calling load api\n");
 
     printf("%s: call attest api\n", get_instance_name());
-    if (ree_attest("1"))
+    char *sig = ree_attest("1");
+    if (!sig)
         printf("%s: Error when calling attest api\n");
+
+    printf("%s: Received attestation signature: %s\n", get_instance_name(), sig);
 
     printf("%s: Finished running\n", get_instance_name());
 
