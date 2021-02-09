@@ -1,0 +1,9 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+procedure Load {
+    int load(in string application);
+}

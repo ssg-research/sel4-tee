@@ -1,0 +1,11 @@
+/*
+ * Copyright 2021, Max Crone, Aalto University
+ *
+ * SPDX-License-Identifier: BSD-2-Clause
+ */
+
+import "../../interfaces/Offload.idl4";
+
+component Driver {
+    provides Offload offload;
+}
