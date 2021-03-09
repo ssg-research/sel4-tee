@@ -26,6 +26,11 @@ assembly {
                 connection seL4RPCCall api_loader_conn(from api.load, to loader.load);
                 connection seL4RPCCall api_attest_conn(from api.attest, to attestation.attest);
                 connection seL4RPCCall attest_driver_conn(from attestation.offload, to driver.offload);
+
+                connection seL4SharedData ta_binary(from ta.d, to attestation.ta);
+        }
+        configuration {
+            ta.ta = true;
         }
 }
 
