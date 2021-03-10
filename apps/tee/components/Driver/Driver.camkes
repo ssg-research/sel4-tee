@@ -7,7 +7,6 @@
 import "../../interfaces/Offload.idl4";
 
 component Driver {
-    control;
     provides Offload offload;
 
     uses PutChar interrupt_putchar;

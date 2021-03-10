@@ -25,7 +25,6 @@ assembly {
                 component Runner runner;
                 component TA ta;
 
-
                 connection seL4RPCCall runner_api_conn(from runner.ree, to api.ree);
                 connection seL4RPCCall api_loader_conn(from api.load, to loader.load);
                 connection seL4RPCCall api_attest_conn(from api.attest, to attestation.attest);

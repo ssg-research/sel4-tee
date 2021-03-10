@@ -16,6 +16,7 @@
 
 #define CLIENT_BUF 20
 #define SERIAL_BUF (0x1000 - 8)
+#define MAGIC_NUMBER 01
 
 struct {
     uint32_t head;
@@ -28,9 +29,10 @@ void pre_init(void)
     set_putchar(interrupt_putchar_putchar);
 }
 
-int run(void)
+int offload_sign(const char* fingerprint, char **signature)
 {
-    printf("%s: Hello Serial Server!\n", get_instance_name());
+    printf("%s: Offloading attestation to hardware\n", get_instance_name());
+    printf("%c%s", MAGIC_NUMBER, fingerprint);
 
     char buf[CLIENT_BUF];
     while (1) {
@@ -43,19 +45,13 @@ int run(void)
             buf[i] = interrupt_getchar_buf->buf[interrupt_getchar_buf->head];
             interrupt_getchar_buf->head = (interrupt_getchar_buf->head + 1) % sizeof(interrupt_getchar_buf->buf);
         } while (buf[i] != '\r' && ++i < CLIENT_BUF - 1);
+
         buf[i] = 0;
-        printf("%s: %s\n", get_instance_name(), buf);
+        printf("%s: got '%s'\n", get_instance_name(), buf);
+
+        *signature = malloc(strlen(buf) + 1);
+        strncpy(*signature, buf, strlen(buf) + 1);
+        (*signature)[strlen(buf)] = '\0';
+        return 0;
     }
-    return 0;
-}
-
-int offload_sign(const char* fingerprint, char **signature)
-{
-    printf("%s: Offloading attestation to hardware\n", get_instance_name());
-    char *sig = "abcdefgh";
-    *signature = malloc(strlen(sig) + 1);
-    strncpy(*signature, sig, strlen(sig) + 1);
-    (*signature)[strlen(sig)] = '\0';
-
-    return 0;
 }
