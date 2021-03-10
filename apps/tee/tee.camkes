@@ -30,6 +30,8 @@ assembly {
                 connection seL4RPCCall api_attest_conn(from api.attest, to attestation.attest);
                 connection seL4RPCCall attest_driver_conn(from attestation.offload, to driver.offload);
 
+                connection seL4SharedData ta_binary(from ta.d, to attestation.ta);
+
                 /* From serialserver_interrupt */
                 // component Client interruptcli;
                 component SerialServer serial;
@@ -44,7 +46,6 @@ assembly {
         configuration {
                 driver.interrupt_getchar_shmem_size = 0x1000;
                 time_server.timers_per_client = 1;
-                connection seL4SharedData ta_binary(from ta.d, to attestation.ta);
                 ta.ta = true;
         }
 }
