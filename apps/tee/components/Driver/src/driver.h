@@ -38,7 +38,7 @@ struct message {
 
 int check_type(struct message *m, const char expected[3]);
 void send_msg(struct message *m);
-int wait_for_response(struct message *message);
+int wait_for_response(struct message *message, char expected_tag[3]);
 int setup_public_key(void);
 
 struct {

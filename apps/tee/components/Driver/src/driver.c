@@ -31,15 +31,16 @@ void send_msg(struct message *m)
     printf("]\n");
 }
 
-int wait_for_response(struct message *message)
+int wait_for_response(struct message *message, char expected_tag[3])
 {
     seL4_Word badge = 0;
-    int data_pos = 0;
+    int data_pos = -1;
+    int discarded = 0;
     char next;
-    int state = 99; // Waiting for magick number
+    int state = 0; // Waiting for magick number
     unsigned char length[2];
 
-    printf("Starting in state 99, waiting for magick\n");
+    printf("Waiting for %c%c tag\n", expected_tag[0], expected_tag[1]);
 
     while (1)
     {
@@ -50,22 +51,25 @@ int wait_for_response(struct message *message)
         next = interrupt_getchar_buf->buf[interrupt_getchar_buf->head];
         ++data_pos;
 
-        //printf("Got me a %c (%d)\n", next, next);
+        // printf("Got a %d '%c'\n", next, next);
 
         switch (state) {
-        case 99: {
-            if (next == MAGIC_NUMBER) {
-                printf("%s: Found magick, changing to state 0\n", __FUNCTION__);
-                state = 0;
-                data_pos = -1;
-            }
-            break;
-        }
         case 0: {
-            message->type[data_pos] = next;
+            printf("%s: Looking for %d ('%c') at pos %d -> %d ('%c')\n", __FUNCTION__, expected_tag[data_pos], expected_tag[data_pos], data_pos, next, next);
 
-            if (data_pos == 1)
-            {
+            if (expected_tag[data_pos] != next) {
+                ++discarded;
+                if (data_pos == 1 && expected_tag[0] == next) {
+                    data_pos = 0;
+                } else {
+                    data_pos = -1;
+                }
+            }
+
+            if (data_pos == 1) {
+                message->type[0] = expected_tag[0];
+                message->type[1] = expected_tag[1];
+                printf("%s: Skipped %d characters before tag found\n", __FUNCTION__, discarded);
                 printf("%s: Read type field (%c%c), changing to sate 1\n", __FUNCTION__, message->type[0], message->type[1]);
                 state = 1;
                 data_pos = -1;
@@ -134,7 +138,7 @@ int setup_public_key(void)
 
     // Wait for message
     struct message response;
-    wait_for_response(&response);
+    wait_for_response(&response, RECEIVE_VERIFIED_PUBLIC_KEY_HOST);
 
     if (check_type(&response, RECEIVE_VERIFIED_PUBLIC_KEY_HOST) != 0)
         return -1;
@@ -174,7 +178,7 @@ int offload_sign(const char *fingerprint, char **signature)
     send_msg(&m);
 
     //struct message response;
-    wait_for_response(&m);
+    wait_for_response(&m, RECEIVE_SIGNED_MESSAGE_HOST);
     if (check_type(&m, RECEIVE_SIGNED_MESSAGE_HOST) != 0)
         return -1;
 
