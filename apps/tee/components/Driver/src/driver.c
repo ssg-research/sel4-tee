@@ -55,7 +55,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
 
         switch (state) {
         case 0: {
-            printf("%s: Looking for %d ('%c') at pos %d -> %d ('%c')\n", __FUNCTION__, expected_tag[data_pos], expected_tag[data_pos], data_pos, next, next);
+            // printf("%s: Looking for %d ('%c') at pos %d -> %d ('%c')\n", __FUNCTION__, expected_tag[data_pos], expected_tag[data_pos], data_pos, next, next);
 
             if (expected_tag[data_pos] != next) {
                 ++discarded;
@@ -92,6 +92,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
                 printf("%s: Maximum message size exceeded (data_pos: %u < %u)\n", __FUNCTION__, data_pos, MAX_MSG_SIZE);
                 state = -1;
             } else {
+                printf("%s: Saving data at %d\n", __FUNCTION__, data_pos);
                 message->msg[data_pos] = next;
 
                 if (data_pos + 1 == message->len) {
@@ -139,6 +140,7 @@ int setup_public_key(void)
     // Wait for message
     struct message response;
     wait_for_response(&response, RECEIVE_VERIFIED_PUBLIC_KEY_HOST);
+    printf("Success!\n");
 
     if (check_type(&response, RECEIVE_VERIFIED_PUBLIC_KEY_HOST) != 0)
         return -1;
