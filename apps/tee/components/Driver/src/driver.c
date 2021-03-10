@@ -34,13 +34,6 @@ void send_msg(struct message *m) {
         printf("%c", m->msg[0]);
 }
 
-void send_message(char *msg, size_t len)
-{
-    (void) len;
-    // FIXME: Needs to handle null characters!!!
-    printf("%c%s", MAGIC_NUMBER, msg);
-}
-
 int wait_for_response(struct message *message)
 {
     seL4_Word badge = 0;
@@ -129,38 +122,37 @@ void setup_public_key(void)
 
 int offload_sign(const char *fingerprint, char **signature)
 {
+    struct message m;
+
+    // Replace signature
+    unsigned char dummy_fingerprint[FINGERPRINT_SIZE] = {
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    fingerprint = dummy_fingerprint;
+
     printf("%s: Retrieving public key\n", get_instance_name());
     setup_public_key();
 
-    printf("%s: Offloading attestation to hardware\n", get_instance_name());
+    printf("%s: Asking to sign hash", get_instance_name());
 
     // Construct request
-    u_int16_t length_int = 64;
-    unsigned char tag[2] = RECEIVE_MESSAGE_SIGNATURE_FPGA;
-    unsigned char length[2];
-    length[0] = length_int & 0xff;
-    length[1] = (length_int >> 8) & 0xff;
-    // example msg
-    unsigned char msg[64] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-    // construct the TLV message
-    unsigned char message[4 + sizeof(msg)];
-    memcpy(message, tag, 2);
-    memcpy(&message[2], length, 2);
-    memcpy(&message[4], msg, (size_t)length_int);
-    send_message(message, 4 + sizeof(msg));
+    strncpy(m.type, RECEIVE_MESSAGE_SIGNATURE_FPGA, 2);
+    m.len = 64;
+    strncpy(m.msg, fingerprint, 64);
+    send_msg(&m);
 
-    struct message response;
-    wait_for_response(&response);
+    //struct message response;
+    wait_for_response(&m);
 
-    *signature = malloc(response.len);
-    strncpy(*signature, response.msg, response.len);
+    *signature = malloc(m.len);
+    strncpy(*signature, m.msg, m.len);
+    *signature[m.len] = 0;
 
     printf("%s: got response\n", get_instance_name());
     return 0;

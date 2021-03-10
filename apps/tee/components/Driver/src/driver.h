@@ -13,6 +13,7 @@
 #define CLIENT_BUF 20
 #define SERIAL_BUF (0x1000 - 8)
 
+#define FINGERPRINT_SIZE 64
 #define MAX_MSG_SIZE 4096
 #define MAGIC_NUMBER 16
 
@@ -35,10 +36,8 @@ struct message {
     char msg[MAX_MSG_SIZE];
 };
 
-void send_message(char *msg, size_t len);
-int request_verified_public_key(int fd);
-int receive_verified_pk(int fd, unsigned char *pk, unsigned char *verified_public_key);
+void send_msg(struct message *m);
 int wait_for_response(struct message *message);
-
+void setup_public_key(void);
 
 #endif //TEE_DRIVER_DRIVER_H
