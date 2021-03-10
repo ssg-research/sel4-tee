@@ -36,8 +36,9 @@ struct message {
     char msg[MAX_MSG_SIZE];
 };
 
+int check_type(struct message *m, const char expected[3]);
 void send_msg(struct message *m);
 int wait_for_response(struct message *message);
-void setup_public_key(void);
+int setup_public_key(void);
 
 #endif //TEE_DRIVER_DRIVER_H
