@@ -26,6 +26,13 @@ void pre_init(void)
     set_putchar(interrupt_putchar_putchar);
 }
 
+void send_msg(struct message *m) {
+    printf("%c", MAGIC_NUMBER);
+    printf("%c%c", m->type[0], m->type[1]);
+    printf("%c%c", (char) (m->len & 0xff), (char) ((m->len >> 8) & 0xff));
+    for (int i = 0; i < m->len; ++i)
+        printf("%c", m->msg[0]);
+}
 
 void send_message(char *msg, size_t len)
 {
@@ -106,8 +113,11 @@ void setup_public_key(void)
     unsigned char verified_public_key_sel4[crypto_sign_PUBLICKEYBYTES];
 
     // Send request for key
-    unsigned char req[2] = RECEIVE_REQUEST_VERIFIED_PK_FPGA;
-    send_message(req, 2);
+    // unsigned char req[2] = RECEIVE_REQUEST_VERIFIED_PK_FPGA;
+    struct message req; 
+    strncpy(req.type, RECEIVE_REQUEST_VERIFIED_PK_FPGA, 2);
+    req.len = 0;
+    send_msg(&req);
 
     // Wait for message
     struct message response;
