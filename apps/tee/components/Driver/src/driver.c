@@ -15,94 +15,97 @@
 
 #include "driver.h"
 
-struct {
-    uint32_t head;
-    uint32_t tail;
-    char buf[SERIAL_BUF];
-} extern volatile *interrupt_getchar_buf;
-
 void pre_init(void)
 {
     set_putchar(interrupt_putchar_putchar);
 }
 
-void send_msg(struct message *m) {
+void send_msg(struct message *m) 
+{
     printf("[");
     printf("%c", MAGIC_NUMBER);
     printf("%c%c", m->type[0], m->type[1]);
     printf("%c%c", (char) (m->len & 0xff), (char) ((m->len >> 8) & 0xff));
     for (int i = 0; i < m->len; ++i)
         printf("%c", m->msg[0]);
-    printf("]");
+    printf("]\n");
 }
 
 int wait_for_response(struct message *message)
 {
     seL4_Word badge = 0;
-    int i = 0;
-    char next = 0;
-    int state = 0;
+    int data_pos = 0;
+    char next;
+    int state = 99; // Waiting for magick number
     unsigned char length[2];
+
+    printf("Starting in state 99, waiting for magick\n");
 
     while (1)
     {
-        if (interrupt_getchar_buf->head == interrupt_getchar_buf->tail)
-        {
+        if (interrupt_getchar_buf->head == interrupt_getchar_buf->tail) {
             seL4_Wait(interrupt_getchar_notification(), &badge);
         }
+
         next = interrupt_getchar_buf->buf[interrupt_getchar_buf->head];
-        printf("Got me a %c (%d)\n", next, next);
+        ++data_pos;
 
-        switch (state)
-        {
-        case 0:
-        {
-            printf("We're in state 0\n");
-            message->type[i] = next;
+        //printf("Got me a %c (%d)\n", next, next);
 
-            if (i == 1) 
+        switch (state) {
+        case 99: {
+            if (next == MAGIC_NUMBER) {
+                printf("%s: Found magick, changing to state 0\n", __FUNCTION__);
+                state = 0;
+                data_pos = -1;
+            }
+            break;
+        }
+        case 0: {
+            message->type[data_pos] = next;
+
+            if (data_pos == 1)
+            {
+                printf("%s: Read type field (%c%c), changing to sate 1\n", __FUNCTION__, message->type[0], message->type[1]);
                 state = 1;
+                data_pos = -1;
+            }
             break;
         }
-        case 1:
-        {
-            printf("We're in state 1\n");
-            length[i - 2] = next;
+        case 1: {
+            length[data_pos] = next;
 
-            if (i == 3) {
+            if (data_pos == 1) {
                 message->len = length[0] | length[1] << 8;
-                printf("Message size is %lu\n", message->len);
+                printf("%s: Read size field (%lu), chaning to state 2\n", __FUNCTION__, message->len);
                 state = 2;
+                data_pos = -1;
             }
             break;
         }
-        case 2:
-        {
-            printf("We're in state 2\n");
-            unsigned msg_pos = i - 4;
-            if (msg_pos >= MAX_MSG_SIZE) {
-                printf("Maximum message size exceeded (msg_pos is %u < %u)\n", msg_pos, MAX_MSG_SIZE);
+        case 2: {
+            if (data_pos >= MAX_MSG_SIZE) {
+                printf("%s: Maximum message size exceeded (data_pos: %u < %u)\n", __FUNCTION__, data_pos, MAX_MSG_SIZE);
                 state = -1;
+            } else {
+                message->msg[data_pos] = next;
+
+                if (data_pos + 1 == message->len) {
+                    printf("%s: Read data (type: %c%c, size: %lu)\n", __FUNCTION__, message->type[0],
+                           message->type[1], message->len);
+                    state = 100;
+                }
             }
-
-            message->msg[msg_pos] = next;
             break;
-
         }
         }
 
         interrupt_getchar_buf->head = (interrupt_getchar_buf->head + 1) % sizeof(interrupt_getchar_buf->buf);
-        ++i;
 
-        if (state == 2 && (i - 4) == message->len) {
-            printf("%s: Got message of type %c%c and length %lu", __FUNCTION__, message->type[0],
-                   message->type[1], message->len);
+        if (state == 100) // Successfull
             return 0;
-        }
-        if (state < 0) {
-            printf("%s: failed\n", __FUNCTION__);
+        if (state < 0) // Fail
             return state;
-        }
     };
 }
 

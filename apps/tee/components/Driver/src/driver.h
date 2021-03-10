@@ -41,4 +41,10 @@ void send_msg(struct message *m);
 int wait_for_response(struct message *message);
 int setup_public_key(void);
 
+struct {
+    uint32_t head;
+    uint32_t tail;
+    char buf[SERIAL_BUF];
+} extern volatile *interrupt_getchar_buf;
+
 #endif //TEE_DRIVER_DRIVER_H
