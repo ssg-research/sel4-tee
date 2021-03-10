@@ -44,6 +44,8 @@ assembly {
         configuration {
                 driver.interrupt_getchar_shmem_size = 0x1000;
                 time_server.timers_per_client = 1;
+                connection seL4SharedData ta_binary(from ta.d, to attestation.ta);
+                ta.ta = true;
         }
 }
 
