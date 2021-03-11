@@ -33,7 +33,6 @@ assembly {
                 connection seL4SharedData ta_binary(from ta.d, to attestation.ta);
 
                 /* From serialserver_interrupt */
-                // component Client interruptcli;
                 component SerialServer serial;
                 component TimeServer time_server;
                 connection seL4RPCCall serial_time_server(from time_server.putchar, to serial.processed_putchar);
