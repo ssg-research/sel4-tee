@@ -20,15 +20,21 @@ void pre_init(void)
     set_putchar(interrupt_putchar_putchar);
 }
 
-void send_msg(struct message *m) 
-{
-    printf("[");
-    printf("%c", MAGIC_NUMBER);
-    printf("%c%c", m->type[0], m->type[1]);
-    printf("%c%c", (char) (m->len & 0xff), (char) ((m->len >> 8) & 0xff));
-    for (int i = 0; i < m->len; ++i)
-        printf("%c", m->msg[i]);
-    printf("]\n");
+void post_init(void) {}
+
+void send_msg(struct message *m) {
+  FILE *stream = stdout;
+#ifdef ADD_NEWLINE_ON_POST
+  fprintf(stream, "[");
+#endif // ADD_NEWLINE_ON_POST
+  fprintf(stream, "%c", MAGIC_NUMBER);
+  fprintf(stream, "%c%c", m->type[0], m->type[1]);
+  fprintf(stream, "%c%c", (char)(m->len & 0xff), (char)((m->len >> 8) & 0xff));
+  for (int i = 0; i < m->len; ++i)
+    fprintf(stream, "%c", m->msg[i]);
+#ifdef ADD_NEWLINE_ON_POST
+  fprintf(stream, "]\n");
+#endif // ADD_NEWLINE_ON_POST
 }
 
 int wait_for_response(struct message *message, char expected_tag[3])
@@ -40,7 +46,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
     int state = 0; // Waiting for magick number
     unsigned char length[2];
 
-    printf("Waiting for %c%c tag\n", expected_tag[0], expected_tag[1]);
+    debug_printf("Waiting for %c%c tag\n", expected_tag[0], expected_tag[1]);
 
     while (1)
     {
@@ -51,11 +57,11 @@ int wait_for_response(struct message *message, char expected_tag[3])
         next = interrupt_getchar_buf->buf[interrupt_getchar_buf->head];
         ++data_pos;
 
-        // printf("Got a %d '%c'\n", next, next);
+        // debug_printf("Got a %d '%c'\n", next, next);
 
         switch (state) {
         case 0: {
-            // printf("%s: Looking for %d ('%c') at pos %d -> %d ('%c')\n", __FUNCTION__, expected_tag[data_pos], expected_tag[data_pos], data_pos, next, next);
+            // debug_printf("%s: Looking for %d ('%c') at pos %d -> %d ('%c')\n", __FUNCTION__, expected_tag[data_pos], expected_tag[data_pos], data_pos, next, next);
 
             if (expected_tag[data_pos] != next) {
                 ++discarded;
@@ -69,8 +75,8 @@ int wait_for_response(struct message *message, char expected_tag[3])
             if (data_pos == 1) {
                 message->type[0] = expected_tag[0];
                 message->type[1] = expected_tag[1];
-                printf("%s: Skipped %d characters before tag found\n", __FUNCTION__, discarded);
-                printf("%s: Read type field (%c%c), changing to sate 1\n", __FUNCTION__, message->type[0], message->type[1]);
+                debug_printf("Skipped %d characters before tag found\n", discarded);
+                debug_printf("Read type field (%c%c), changing to sate 1\n", message->type[0], message->type[1]);
                 state = 1;
                 data_pos = -1;
             }
@@ -81,7 +87,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
 
             if (data_pos == 1) {
                 message->len = length[0] | length[1] << 8;
-                printf("%s: Read size field (%lu), chaning to state 2\n", __FUNCTION__, message->len);
+                debug_printf("Read size field (%lu), chaning to state 2\n", message->len);
                 state = 2;
                 data_pos = -1;
             }
@@ -89,14 +95,14 @@ int wait_for_response(struct message *message, char expected_tag[3])
         }
         case 2: {
             if (data_pos >= MAX_MSG_SIZE) {
-                printf("%s: Maximum message size exceeded (data_pos: %u < %u)\n", __FUNCTION__, data_pos, MAX_MSG_SIZE);
+                debug_printf("Maximum message size exceeded (data_pos: %u < %u)\n", data_pos, MAX_MSG_SIZE);
                 state = -1;
             } else {
-                printf("%s: Saving data at %d\n", __FUNCTION__, data_pos);
+                debug_printf("Saving data at %d\n", data_pos);
                 message->msg[data_pos] = next;
 
                 if (data_pos + 1 == message->len) {
-                    printf("%s: Read data (type: %c%c, size: %lu)\n", __FUNCTION__, message->type[0],
+                    debug_printf("Read data (type: %c%c, size: %lu)\n", message->type[0],
                            message->type[1], message->len);
                     state = 100;
                 }
@@ -119,7 +125,7 @@ int check_type(struct message *m, const char expected[3])
     if (m->type[0] == expected[0], m->type[1] == expected[1])
         return 0;
 
-    printf("err: Expected message of type %s, but saw %c%c\n",
+    debug_printf("ERROR: Expected message of type %s, but saw %c%c\n",
            expected, m->type[0], m->type[1]);
     return -1;
 }
@@ -140,7 +146,7 @@ int setup_public_key(void)
     // Wait for message
     struct message response;
     wait_for_response(&response, RECEIVE_VERIFIED_PUBLIC_KEY_HOST);
-    printf("Success!\n");
+    debug_printf("Success!\n");
 
     if (check_type(&response, RECEIVE_VERIFIED_PUBLIC_KEY_HOST) != 0)
         return -1;
@@ -165,13 +171,13 @@ int offload_sign(const char *fingerprint, char **signature)
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     fingerprint = dummy_fingerprint;
 
-    printf("%s: Retrieving public key\n", get_instance_name());
+    debug_printf("Retrieving public key\n");
     if (setup_public_key() != 0) {
         printf("Public key setup failed!!!");
         return -1;
     }
 
-    printf("%s: Asking to sign hash", get_instance_name());
+    debug_printf("Asking to sign hash");
 
     // Construct request
     strncpy(m.type, RECEIVE_MESSAGE_SIGNATURE_FPGA, 2);
@@ -187,6 +193,6 @@ int offload_sign(const char *fingerprint, char **signature)
     *signature = malloc(m.len);
     strncpy(*signature, m.msg, m.len);
 
-    printf("%s: got response\n", get_instance_name());
+    debug_printf("got response\n");
     return 0;
 }

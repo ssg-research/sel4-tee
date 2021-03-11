@@ -10,6 +10,13 @@
 #include <camkes.h>
 #include <stdio.h>
 
+#define ADD_NEWLINE_ON_POST
+
+#define debug_printf(FORMAT, ...)                                               \
+  do {                                                                         \
+    fprintf(stderr, "%s:%s: " FORMAT, get_instance_name(), __FUNCTION__, ## __VA_ARGS__);        \
+  } while (0);
+
 #define CLIENT_BUF 20
 #define SERIAL_BUF (0x1000 - 8)
 
