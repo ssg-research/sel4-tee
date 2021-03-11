@@ -27,7 +27,7 @@ void send_msg(struct message *m)
     printf("%c%c", m->type[0], m->type[1]);
     printf("%c%c", (char) (m->len & 0xff), (char) ((m->len >> 8) & 0xff));
     for (int i = 0; i < m->len; ++i)
-        printf("%c", m->msg[0]);
+        printf("%c", m->msg[i]);
     printf("]\n");
 }
 
