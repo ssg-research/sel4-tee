@@ -46,7 +46,9 @@ assembly {
         configuration {
                 driver.interrupt_getchar_shmem_size = 0x1000;
                 time_server.timers_per_client = 1;
-                ta.ta = true;
+
+		attestation.ta_access = "R";
+		ta.d_access = "R";
         }
 }
 
