@@ -29,7 +29,7 @@ char* attest_attest(const char *application)
     */
 
     // Calculate a hash over the code pages of the TA
-    unsigned char hash[64];
+    unsigned char hash[crypto_hashblocks_sha256_tweet_BLOCKBYTES];
     if (crypto_hash(hash, ta_str, TA_BUFSIZE)) {
 	printf("%s: Error while calculating hash\n", get_instance_name());
     }
@@ -38,7 +38,7 @@ char* attest_attest(const char *application)
 
     printf("%s: call Driver\n", get_instance_name());
     char *out = NULL;
-    offload_sign(application, &out);
+    offload_sign(hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, &out);
     
     return out;
 }

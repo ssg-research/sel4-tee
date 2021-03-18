@@ -155,21 +155,9 @@ int setup_public_key(void)
     return 0;
 }
 
-int offload_sign(const char *fingerprint, char **signature)
+int offload_sign(const char *fingerprint, int len, char **signature)
 {
     struct message m;
-
-    // Replace signature
-    unsigned char dummy_fingerprint[FINGERPRINT_SIZE] = {
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-    fingerprint = dummy_fingerprint;
 
     debug_printf("Retrieving public key\n");
     if (setup_public_key() != 0) {
@@ -181,8 +169,8 @@ int offload_sign(const char *fingerprint, char **signature)
 
     // Construct request
     strncpy(m.type, RECEIVE_MESSAGE_SIGNATURE_FPGA, 2);
-    m.len = 64;
-    strncpy(m.msg, fingerprint, 64);
+    m.len = len;
+    strncpy(m.msg, fingerprint, len);
     send_msg(&m);
 
     //struct message response;
