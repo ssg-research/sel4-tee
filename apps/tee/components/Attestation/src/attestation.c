@@ -44,11 +44,13 @@ char* attest_attest(const char *application)
 
     printf("%s: call Driver\n", get_instance_name());
     char *out = NULL;
-    offload_sign(hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, &out);
+    int out_len;
+    offload_sign(hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, &out, &out_len);
+    printf("%s: output length = %d\n", get_instance_name(), out_len);
 
     // Print signature in base64 for observability purposes
     unsigned char *out_base64;
-    out_base64 = base64_encode((const unsigned char *) out, strlen(out), NULL);
+    out_base64 = base64_encode((const unsigned char *) out, out_len, NULL);
     printf("%s: signature: %s\n", get_instance_name(), out_base64);
     free(out_base64);
     
