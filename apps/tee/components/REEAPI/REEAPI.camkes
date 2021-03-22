@@ -7,9 +7,11 @@
 import "../../interfaces/REE.idl4";
 import "../../interfaces/Load.idl4";
 import "../../interfaces/Attest.idl4";
+import "../../interfaces/Application.idl4";
 
 component REEAPI {
     provides REE ree;
     uses Load load;
     uses Attest attest;
+    uses Application app;
 }

@@ -7,4 +7,5 @@
 procedure REE {
     int load(in string application);
     string attest(in string application);
+    int start(in string application);
 }

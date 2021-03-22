@@ -7,7 +7,9 @@
 #include <camkes.h>
 #include <stdio.h>
 
-void hello(void)
+int app_start(void)
 {
     printf("%s: Hello, world!\n", get_instance_name());
+
+    return 0;
 }

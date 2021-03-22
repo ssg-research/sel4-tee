@@ -23,3 +23,9 @@ char* ree_attest(const char* application)
 
     return res;
 }
+
+int ree_start(const char *application)
+{
+    printf("%s: start TA %s\n", get_instance_name(), application);
+    return app_start();
+}

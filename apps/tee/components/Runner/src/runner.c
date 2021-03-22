@@ -20,6 +20,9 @@ int run(void)
 
     printf("%s: Received attestation signature: %s\n", get_instance_name(), sig);
 
+    printf("%s: request to start TA\n", get_instance_name());
+    ree_start("1");
+
     printf("%s: Finished running\n", get_instance_name());
 
     return 0;
