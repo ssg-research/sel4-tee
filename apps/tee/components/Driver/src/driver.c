@@ -76,7 +76,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
                 message->type[0] = expected_tag[0];
                 message->type[1] = expected_tag[1];
                 debug_printf("Skipped %d characters before tag found\n", discarded);
-                debug_printf("Read type field (%c%c), changing to sate 1\n", message->type[0], message->type[1]);
+                debug_printf("Read type field (%c%c), changing to state 1\n", message->type[0], message->type[1]);
                 state = 1;
                 data_pos = -1;
             }
