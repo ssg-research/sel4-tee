@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-procedure Application {
-    int start();
+procedure TA2Interface {
+    int start(in int x);
 }

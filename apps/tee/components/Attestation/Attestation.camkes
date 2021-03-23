@@ -12,4 +12,5 @@ component Attestation {
     provides Attest attest;
     uses Offload offload;
     dataport Buf(TA_BUFSIZE) ta;
+    dataport Buf(TA_BUFSIZE) ta2;
 }

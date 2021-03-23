@@ -16,6 +16,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Loader)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/REEAPI)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Runner)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/TA)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/TA2)
 
 DeclareCAmkESRootserver(tee.camkes INCLUDES include)
 add_simulate_test([=[wait_for "After the client"]=])

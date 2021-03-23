@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-import "../../interfaces/TAInterface.idl4";
+import "../../interfaces/TA2Interface.idl4";
 #include "../../include/buffer.h"
 
-component TA {
-    provides TAInterface app;
+component TA2 {
+    provides TA2Interface app;
     dataport Buf(TA_BUFSIZE) d;
 }

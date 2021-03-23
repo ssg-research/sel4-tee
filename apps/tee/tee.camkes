@@ -15,6 +15,7 @@ import "components/Loader/Loader.camkes";
 import "components/REEAPI/REEAPI.camkes";
 import "components/Runner/Runner.camkes";
 import "components/TA/TA.camkes";
+import "components/TA2/TA2.camkes";
 
 assembly {
         composition {
@@ -23,15 +24,20 @@ assembly {
                 component Loader loader;
                 component REEAPI api;
                 component Runner runner;
-                component TA ta;
 
                 connection seL4RPCCall runner_api_conn(from runner.ree, to api.ree);
                 connection seL4RPCCall api_loader_conn(from api.load, to loader.load);
                 connection seL4RPCCall api_attest_conn(from api.attest, to attestation.attest);
-                connection seL4RPCCall api_ta_conn(from api.app, to ta.app);
                 connection seL4RPCCall attest_driver_conn(from attestation.offload, to driver.offload);
 
+		/* Trusted Application specific composition */
+                component TA ta;
+                connection seL4RPCCall api_ta_conn(from api.ta, to ta.app);
                 connection seL4SharedData ta_binary(from ta.d, to attestation.ta);
+
+		component TA2 ta2;
+                connection seL4RPCCall api_ta2_conn(from api.ta2, to ta2.app);
+                connection seL4SharedData ta2_binary(from ta2.d, to attestation.ta2);
 
                 /* From serialserver_interrupt */
                 component SerialServer serial;
