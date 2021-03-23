@@ -5,4 +5,4 @@
  */
 #pragma once
 
-#define TA_BUFSIZE 4096
+#define TA_BUFSIZE 188416

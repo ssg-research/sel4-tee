@@ -8,4 +8,4 @@ cmake_minimum_required(VERSION 3.7.2)
 
 project(ComponentREEAPI C)
 
-DeclareCAmkESComponent(REEAPI SOURCES src/api.c)
+DeclareCAmkESComponent(REEAPI SOURCES src/api.c LIBS RegisteredTAs)

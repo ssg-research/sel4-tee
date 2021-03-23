@@ -6,10 +6,11 @@
 
 #include <camkes.h>
 #include <stdio.h>
+#include <trusted_apps.h>
 
 int run(void)
 {
-    printf("%s: request to load TA %d\n", get_instance_name(), 1);
+    printf("%s: request to load TA %d\n", get_instance_name(), ID_TA1);
     if (ree_load(1))
         printf("%s: Error when calling load api\n");
 

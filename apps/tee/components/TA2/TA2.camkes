@@ -5,7 +5,7 @@
  */
 
 import "../../interfaces/TA2Interface.idl4";
-#include "../../include/buffer.h"
+#include "../include/buffer.h"
 
 component TA2 {
     provides TA2Interface app;

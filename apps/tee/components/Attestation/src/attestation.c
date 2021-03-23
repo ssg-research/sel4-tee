@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <trusted_apps.h>
 #include <buffer.h>
 #include "tweetnacl.h"
 #include "base64.h"
