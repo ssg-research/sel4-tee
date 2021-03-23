@@ -7,9 +7,9 @@
 #include <camkes.h>
 #include <stdio.h>
 
-int load_load(const char* application)
+int load_load(int application)
 {
-    printf("%s: Loading application \"%s\"\n", get_instance_name(), application);
+    printf("%s: loading TA %d...\n", get_instance_name(), application);
 
     return 0;
 }

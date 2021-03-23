@@ -13,7 +13,7 @@
 #include "tweetnacl.h"
 #include "base64.h"
 
-char* attest_attest(const char *application)
+char* attest_attest(int application)
 {
     printf("%s: Taking measurements..\n", get_instance_name());
 

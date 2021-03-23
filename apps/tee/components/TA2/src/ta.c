@@ -9,7 +9,7 @@
 
 int app_start(int x)
 {
-    printf("%s: Magic number is %d!\n", get_instance_name(), x);
+    printf("%s: hello! magic number is %d!\n", get_instance_name(), x);
 
     return 0;
 }
