@@ -7,14 +7,13 @@
 #include <camkes.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <trusted_apps.h>
 #include <buffer.h>
 #include "tweetnacl.h"
 #include "base64.h"
 
-static int attest(const char *mem, size_t mem_len, char *signature)
+static int attest(const char *mem, size_t mem_len, char *signature, int *sig_len)
 {
     // Calculate a hash over the code pages of the TA
     unsigned char hash[crypto_hashblocks_sha256_tweet_BLOCKBYTES];
@@ -30,14 +29,14 @@ static int attest(const char *mem, size_t mem_len, char *signature)
     free(hash_base64);
 
     printf("%s: call Driver\n", get_instance_name());
-    if (offload_sign(hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, &signature)) {
+    if (offload_sign(hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, &signature, sig_len)) {
 	printf("%s: Error in driver\n", get_instance_name());
 	return -1;
     }
 
     // Print signature in base64 for observability purposes
     unsigned char *out_base64;
-    out_base64 = base64_encode((const unsigned char *) signature, strlen(signature), NULL);
+    out_base64 = base64_encode((const unsigned char *) signature, *sig_len, NULL);
     printf("%s: signature is %s\n", get_instance_name(), out_base64);
     free(out_base64);
 
@@ -68,7 +67,8 @@ char* attest_attest(int application)
     }
 
     char *signature = NULL;
-    if (attest(ta_str, ta_mem_size, signature)) {
+    int sig_len;
+    if (attest(ta_str, ta_mem_size, signature, &sig_len)) {
         printf("%s: Failed to attest TA %d\n", get_instance_name(), application);
 	return NULL;
     }
