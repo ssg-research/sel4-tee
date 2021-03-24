@@ -8,21 +8,28 @@
 #include <stdio.h>
 #include <trusted_apps.h>
 
-int run(void)
+static void test(int app)
 {
-    printf("%s: request to load TA %d\n", get_instance_name(), ID_TA1);
-    if (ree_load(1))
+    printf("%s: request to load TA %d\n", get_instance_name(), app);
+    if (ree_load(app))
         printf("%s: Error when calling load api\n");
 
-    printf("%s: call attest api\n", get_instance_name());
-    char *sig = ree_attest(1);
+    printf("%s: request to attest TA %d\n", get_instance_name(), app);
+    char *sig = ree_attest(app);
     if (!sig)
         printf("%s: Error when calling attest api\n");
 
     printf("%s: Received attestation signature: %s\n", get_instance_name(), sig);
 
-    printf("%s: request to start TA\n", get_instance_name());
-    ree_start(ID_TA2);
+    printf("%s: request to start TA %d\n", get_instance_name(), app);
+    ree_start(app);
+
+}
+
+int run(void)
+{
+    test(ID_TA1);
+    test(ID_TA2);
 
     printf("%s: finished running\n", get_instance_name());
 
