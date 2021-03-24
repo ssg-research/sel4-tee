@@ -181,7 +181,7 @@ int offload_sign(const char *fingerprint, int len, char **signature, int *out_le
     *signature = malloc(m.len);
     strncpy(*signature, m.msg, m.len);
     *out_len = m.len;
-    debug_printf("signature length = %d", m.len);
+    debug_printf("signature length = %d\n", m.len);
 
     debug_printf("got response\n");
     return 0;
