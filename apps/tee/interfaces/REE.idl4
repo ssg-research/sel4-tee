@@ -5,6 +5,7 @@
  */
 
 procedure REE {
-    int load(in string application);
-    string attest(in string application);
+    int load(in int application);
+    string attest(in int application);
+    int start(in int application);
 }

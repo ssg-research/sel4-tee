@@ -7,9 +7,13 @@
 import "../../interfaces/REE.idl4";
 import "../../interfaces/Load.idl4";
 import "../../interfaces/Attest.idl4";
+import "../../interfaces/TAInterface.idl4";
+import "../../interfaces/TA2Interface.idl4";
 
 component REEAPI {
     provides REE ree;
     uses Load load;
     uses Attest attest;
+    uses TAInterface ta;
+    uses TA2Interface ta2;
 }

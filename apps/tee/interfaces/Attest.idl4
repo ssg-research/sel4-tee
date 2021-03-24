@@ -5,5 +5,5 @@
  */
 
 procedure Attest {
-    string attest(in string application);
+    string attest(in int application);
 }

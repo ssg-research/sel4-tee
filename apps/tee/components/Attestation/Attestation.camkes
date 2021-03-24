@@ -6,10 +6,12 @@
 
 import "../../interfaces/Attest.idl4";
 import "../../interfaces/Offload.idl4";
-#include "../../include/buffer.h"
+
+#include "../include/buffer.h"
 
 component Attestation {
     provides Attest attest;
     uses Offload offload;
     dataport Buf(TA_BUFSIZE) ta;
+    dataport Buf(TA_BUFSIZE) ta2;
 }

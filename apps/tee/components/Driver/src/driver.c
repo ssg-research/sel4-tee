@@ -98,7 +98,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
                 debug_printf("Maximum message size exceeded (data_pos: %u < %u)\n", data_pos, MAX_MSG_SIZE);
                 state = -1;
             } else {
-                debug_printf("Saving data at %d\n", data_pos);
+                //debug_printf("Saving data at %d\n", data_pos);
                 message->msg[data_pos] = next;
 
                 if (data_pos + 1 == message->len) {

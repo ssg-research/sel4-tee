@@ -7,9 +7,9 @@
 #include <camkes.h>
 #include <stdio.h>
 
-int load_load(int application)
+int app_start(int x)
 {
-    printf("%s: loading TA %d...\n", get_instance_name(), application);
+    printf("%s: hello! magic number is %d!\n", get_instance_name(), x);
 
     return 0;
 }

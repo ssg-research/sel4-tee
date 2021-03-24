@@ -6,6 +6,6 @@
 
 cmake_minimum_required(VERSION 3.7.2)
 
-project(ComponentRunner C)
+project(ComponentTA2 C)
 
-DeclareCAmkESComponent(Runner SOURCES src/runner.c LIBS RegisteredTAs)
+DeclareCAmkESComponent(TA2 SOURCES src/ta.c)
