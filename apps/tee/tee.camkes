@@ -55,6 +55,8 @@ assembly {
 
 		attestation.ta_access = "R";
 		ta.d_access = "R";
+		attestation.ta2_access = "R";
+		ta2.d_access = "R";
         }
 }
 
