@@ -170,7 +170,7 @@ int offload_sign(const char *fingerprint, int len, char **signature, int *out_le
     // Construct request
     strncpy(m.type, RECEIVE_MESSAGE_SIGNATURE_FPGA, 2);
     m.len = len;
-    strncpy(m.msg, fingerprint, len);
+    memcpy(m.msg, fingerprint, len);
     send_msg(&m);
 
     //struct message response;
@@ -179,7 +179,7 @@ int offload_sign(const char *fingerprint, int len, char **signature, int *out_le
         return -1;
 
     *signature = malloc(m.len);
-    strncpy(*signature, m.msg, m.len);
+    memcpy(*signature, m.msg, m.len);
     *out_len = m.len;
     debug_printf("signature length = %d\n", m.len);
 
