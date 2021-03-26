@@ -14,6 +14,11 @@
 #include "tweetnacl.h"
 #include "base64.h"
 
+void print_buff(const char *buff, size_t size) {
+  for (int i = 0; i < size; ++i)
+    printf("%02x", buff[i] & 0xff);
+}
+
 static int attest(const char *mem, size_t mem_len, char **signature, size_t *sig_len)
 {
     // Calculate a hash over the code pages of the TA
@@ -26,7 +31,11 @@ static int attest(const char *mem, size_t mem_len, char **signature, size_t *sig
     // Print fingerprint in base64 for observability purposes
     unsigned char *hash_base64;
     hash_base64 = base64_encode((const unsigned char *) hash, crypto_hash_BYTES, NULL);
-    printf("%s: fingerprint is %s\n", get_instance_name(), hash_base64);
+    // printf("%s: fingerprint is %s\n", get_instance_name(), hash_base64);
+    printf("%s: fingerprint is ", get_instance_name());
+    print_buff(hash, crypto_hash_BYTES);
+    printf("\n");
+
     free(hash_base64);
 
     printf("%s: call Driver\n", get_instance_name());
@@ -39,6 +48,9 @@ static int attest(const char *mem, size_t mem_len, char **signature, size_t *sig
     char *out_base64;
     out_base64 = base64_encode((const unsigned char *) *signature, *sig_len, NULL);
     printf("%s: signature is %s\n", get_instance_name(), out_base64);
+    // printf("%s: signature is ", get_instance_name());
+    // print_buff(signature, sig_len);
+    // printf("\n");
     //free(out_base64);
     *signature = out_base64;
 
