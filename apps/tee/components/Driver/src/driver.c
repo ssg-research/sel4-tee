@@ -139,7 +139,7 @@ int setup_public_key(void)
     // Send request for key
     // unsigned char req[2] = RECEIVE_REQUEST_VERIFIED_PK_FPGA;
     struct message req; 
-    strncpy(req.type, RECEIVE_REQUEST_VERIFIED_PK_FPGA, 2);
+    memcpy(req.type, RECEIVE_REQUEST_VERIFIED_PK_FPGA, 2);
     req.len = 0;
     send_msg(&req);
 
@@ -168,7 +168,7 @@ int offload_sign(const char *fingerprint, int len, char **signature, int *out_le
     debug_printf("Asking to sign hash");
 
     // Construct request
-    strncpy(m.type, RECEIVE_MESSAGE_SIGNATURE_FPGA, 2);
+    memcpy(m.type, RECEIVE_MESSAGE_SIGNATURE_FPGA, 2);
     m.len = len;
     memcpy(m.msg, fingerprint, len);
     send_msg(&m);
