@@ -75,8 +75,8 @@ int wait_for_response(struct message *message, char expected_tag[3])
             if (data_pos == 1) {
                 message->type[0] = expected_tag[0];
                 message->type[1] = expected_tag[1];
-                debug_printf("Skipped %d characters before tag found\n", discarded);
-                debug_printf("Read type field (%c%c), changing to state 1\n", message->type[0], message->type[1]);
+                // debug_printf("Skipped %d characters before tag found\n", discarded);
+                // debug_printf("Read type field (%c%c), changing to state 1\n", message->type[0], message->type[1]);
                 state = 1;
                 data_pos = -1;
             }
@@ -87,7 +87,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
 
             if (data_pos == 1) {
                 message->len = length[0] | length[1] << 8;
-                debug_printf("Read size field (%lu), chaning to state 2\n", message->len);
+                // debug_printf("Read size field (%lu), chaning to state 2\n", message->len);
                 state = 2;
                 data_pos = -1;
             }
@@ -95,15 +95,15 @@ int wait_for_response(struct message *message, char expected_tag[3])
         }
         case 2: {
             if (data_pos >= MAX_MSG_SIZE) {
-                debug_printf("Maximum message size exceeded (data_pos: %u < %u)\n", data_pos, MAX_MSG_SIZE);
+                // debug_printf("Maximum message size exceeded (data_pos: %u < %u)\n", data_pos, MAX_MSG_SIZE);
                 state = -1;
             } else {
                 //debug_printf("Saving data at %d\n", data_pos);
                 message->msg[data_pos] = next;
 
                 if (data_pos + 1 == message->len) {
-                    debug_printf("Read data (type: %c%c, size: %lu)\n", message->type[0],
-                           message->type[1], message->len);
+                    // debug_printf("Read data (type: %c%c, size: %lu)\n", message->type[0],
+                    //        message->type[1], message->len);
                     state = 100;
                 }
             }
