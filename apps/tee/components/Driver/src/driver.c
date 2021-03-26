@@ -155,7 +155,7 @@ int setup_public_key(void)
     return 0;
 }
 
-int offload_sign(size_t len, const char *fingerprint, char **signature, int *out_len)
+int offload_sign(size_t len, const char *fingerprint, size_t *out_len, char **signature)
 {
     struct message m;
 

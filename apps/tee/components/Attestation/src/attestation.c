@@ -30,7 +30,7 @@ static int attest(const char *mem, size_t mem_len, char **signature, size_t *sig
     free(hash_base64);
 
     printf("%s: call Driver\n", get_instance_name());
-    if (offload_sign(crypto_hash_BYTES, hash, signature, (int *) sig_len)) {
+    if (offload_sign(crypto_hash_BYTES, hash, sig_len, signature)) {
 	printf("%s: Error in driver\n", get_instance_name());
 	return -1;
     }

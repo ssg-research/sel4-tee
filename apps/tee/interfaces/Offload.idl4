@@ -5,5 +5,5 @@
  */
 
 procedure Offload {
-    int sign(in char fingerprint[], out string signature, out int out_len);
+    int sign(in char fingerprint[], out char signature[]);
 }
