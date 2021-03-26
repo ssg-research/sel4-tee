@@ -18,7 +18,7 @@ static int attest(const char *mem, size_t mem_len, char **signature, size_t *sig
 {
     // Calculate a hash over the code pages of the TA
     unsigned char hash[crypto_hash_sha256_BYTES];
-    if (crypto_hash(hash, mem, mem_len)) {
+    if (crypto_hash_sha256(hash, mem, mem_len)) {
 	printf("%s: Error while calculating hash\n", get_instance_name());
 	return -1;
     }
