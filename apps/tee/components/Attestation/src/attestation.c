@@ -17,20 +17,20 @@
 static int attest(const char *mem, size_t mem_len, char **signature, size_t *sig_len)
 {
     // Calculate a hash over the code pages of the TA
-    unsigned char hash[crypto_hashblocks_sha256_tweet_BLOCKBYTES];
-    if (crypto_hash(hash, mem, mem_len)) {
+    unsigned char hash[crypto_hash_sha256_BYTES];
+    if (crypto_hash_sha256(hash, mem, mem_len)) {
 	printf("%s: Error while calculating hash\n", get_instance_name());
 	return -1;
     }
 
     // Print fingerprint in base64 for observability purposes
     unsigned char *hash_base64;
-    hash_base64 = base64_encode((const unsigned char *) hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, NULL);
+    hash_base64 = base64_encode((const unsigned char *) hash, crypto_hash_sha256_BYTES, NULL);
     printf("%s: fingerprint is %s\n", get_instance_name(), hash_base64);
     free(hash_base64);
 
     printf("%s: call Driver\n", get_instance_name());
-    if (offload_sign(hash, crypto_hashblocks_sha256_tweet_BLOCKBYTES, signature, (int *) sig_len)) {
+    if (offload_sign(hash, crypto_hash_sha256_BYTES, signature, (int *) sig_len)) {
 	printf("%s: Error in driver\n", get_instance_name());
 	return -1;
     }
