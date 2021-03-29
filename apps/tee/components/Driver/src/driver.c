@@ -111,6 +111,7 @@ int wait_for_response(struct message *message, char expected_tag[3])
         }
         }
 
+        interrupt_getchar_buf->buf[interrupt_getchar_buf->head] = '\0';
         interrupt_getchar_buf->head = (interrupt_getchar_buf->head + 1) % sizeof(interrupt_getchar_buf->buf);
 
         if (state == 100) // Successfull
