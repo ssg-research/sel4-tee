@@ -10,7 +10,7 @@ project(tee C)
 
 # Interface for registered TA id's
 add_library(RegisteredTAs INTERFACE)
-target_include_directories(RegisteredTAs INTERFACE "${CMAKE_CURRENT_LIST_DIR}/components/include")
+target_include_directories(RegisteredTAs INTERFACE "${CMAKE_CURRENT_LIST_DIR}/include")
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Attestation)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Driver)
@@ -20,5 +20,5 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/Runner)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/TA)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/components/TA2)
 
-DeclareCAmkESRootserver(tee.camkes)
+DeclareCAmkESRootserver(tee.camkes CPP_INCLUDES include)
 add_simulate_test([=[wait_for "After the client"]=])
