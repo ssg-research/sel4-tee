@@ -1,7 +1,7 @@
 /*
- * Copyright 2021, Max Crone, Aalto University
+ * Copyright 2021 Aalto University & University of Waterloo
  *
- * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 import <std_connector.camkes>;
