@@ -1,3 +1,9 @@
+/*
+ * Copyright 2021 Aalto University & University of Waterloo
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef TEE_DRIVER_DRIVER_H
 #define TEE_DRIVER_DRIVER_H
 
