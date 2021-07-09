@@ -77,3 +77,5 @@ hardware units with the main processor, to protect against transient execution
 attacks. Our design guarantees integrity of the remote attestation procedure.
 It can be extended to leverage co-processors from Google and Apple, for
 wide-scale deployment on mobile devices.
+
+Max Crone, 2021
